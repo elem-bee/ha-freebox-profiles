@@ -1,0 +1,32 @@
+set_override:
+  target:
+    entity:
+      integration: freebox_profiles
+      domain: select
+  fields:
+    mode:
+      required: true
+      example: denied
+      selector:
+        select:
+          translation_key: override_mode
+          options:
+            - denied
+            - allowed
+    duration:
+      required: false
+      default: 0
+      example: 60
+      selector:
+        number:
+          min: 0
+          max: 525600
+          step: 1
+          unit_of_measurement: min
+          mode: box
+
+clear_override:
+  target:
+    entity:
+      integration: freebox_profiles
+      domain: select

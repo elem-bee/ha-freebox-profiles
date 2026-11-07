@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connexion à la Freebox",
+        "description": "Home Assistant doit être sur le même réseau local que la Freebox. Gardez l'adresse proposée, sauf cas particulier.",
+        "data": {
+          "host": "Adresse",
+          "port": "Port HTTPS",
+          "verify_ssl": "Vérifier le certificat de la Freebox"
+        },
+        "data_description": {
+          "host": "mafreebox.freebox.fr fonctionne sur le réseau local de toute Freebox.",
+          "port": "443 pour un accès local.",
+          "verify_ssl": "Utilise les certificats racines de Free. Ne le désactivez que pour un dépannage."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Autoriser à nouveau Home Assistant",
+        "description": "La Freebox n'accepte plus le jeton d'accès de Home Assistant. Validez pour envoyer une nouvelle demande d'autorisation, puis acceptez-la sur la Freebox."
+      }
+    },
+    "progress": {
+      "wait_for_authorization": "Acceptez maintenant la demande d'accès sur votre Freebox (afficheur en façade, ou selon votre modèle). Vous avez environ 2 minutes."
+    },
+    "error": {
+      "cannot_connect": "Impossible de joindre la Freebox. Vérifiez l'adresse et que Home Assistant est bien sur le réseau local de la Freebox.",
+      "unsupported": "Cette Freebox ne propose pas l'API Profils (API Freebox OS v8 ou plus récente nécessaire).",
+      "unknown": "Erreur inattendue, consultez les journaux."
+    },
+    "abort": {
+      "already_configured": "Cette Freebox est déjà configurée.",
+      "authorization_denied": "La demande d'accès a été refusée sur la Freebox.",
+      "authorization_timeout": "La demande d'accès n'a pas été acceptée à temps. Recommencez.",
+      "authorization_error": "L'autorisation a échoué, consultez les journaux.",
+      "reauth_successful": "Home Assistant est de nouveau autorisé.",
+      "wrong_box": "Ce n'est pas la même Freebox qu'auparavant."
+    },
+    "create_entry": {
+      "default": "Dernière étape : dans Freebox OS, ouvrez Paramètres > Gestion des accès > Applications, modifiez « Home Assistant - Freebox Profiles » et activez la permission « Profils » (contrôle parental). Sans elle, l'intégration ne peut pas lire les profils."
+    }
+  },
+  "entity": {
+    "select": {
+      "mode": {
+        "name": "Mode",
+        "state": {
+          "planning": "Planning",
+          "allowed": "Autorisé",
+          "denied": "Bloqué"
+        }
+      }
+    },
+    "sensor": {
+      "current_mode": {
+        "name": "Accès Internet",
+        "state": {
+          "allowed": "Autorisé",
+          "denied": "Bloqué",
+          "webonly": "Web uniquement"
+        }
+      },
+      "planned_mode": {
+        "name": "Accès prévu par le planning",
+        "state": {
+          "allowed": "Autorisé",
+          "denied": "Bloqué",
+          "webonly": "Web uniquement"
+        }
+      },
+      "override_end": {
+        "name": "Fin de la dérogation"
+      },
+      "next_change": {
+        "name": "Prochain changement prévu"
+      },
+      "connected_devices": {
+        "name": "Appareils connectés"
+      }
+    }
+  },
+  "selector": {
+    "override_mode": {
+      "options": {
+        "denied": "Bloquer Internet",
+        "allowed": "Autoriser Internet"
+      }
+    }
+  },
+  "services": {
+    "set_override": {
+      "name": "Déroger au planning",
+      "description": "Bloque ou autorise Internet pour un profil, sans tenir compte de son planning, pendant une durée ou sans limite.",
+      "fields": {
+        "mode": {
+          "name": "Mode",
+          "description": "Bloquer ou autoriser Internet."
+        },
+        "duration": {
+          "name": "Durée",
+          "description": "Durée en minutes. 0 ou vide : sans limite de durée."
+        }
+      }
+    },
+    "clear_override": {
+      "name": "Revenir au planning",
+      "description": "Supprime la dérogation : le profil suit de nouveau son planning."
+    }
+  },
+  "issues": {
+    "missing_permission": {
+      "title": "Profils Freebox : permission manquante",
+      "description": "Home Assistant ne peut pas lire les profils de {title}. Dans Freebox OS, ouvrez Paramètres > Gestion des accès > Applications, modifiez « Home Assistant - Freebox Profiles » et activez la permission « Profils ». Ce message disparaît dès que l'accès fonctionne."
+    }
+  },
+  "exceptions": {
+    "missing_permission": {
+      "message": "L'application Home Assistant n'a pas la permission « Profils » dans Freebox OS."
+    },
+    "update_failed": {
+      "message": "Erreur de communication avec la Freebox : {error}"
+    },
+    "unknown_profile": {
+      "message": "Profil Freebox {profile_id} inconnu."
+    }
+  }
+}

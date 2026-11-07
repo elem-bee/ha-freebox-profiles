@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build the release archive
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Write the release version in manifest.json
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          MANIFEST=custom_components/freebox_profiles/manifest.json
+          jq --arg v "$VERSION" '.version = $v' "$MANIFEST" > manifest.tmp
+          mv manifest.tmp "$MANIFEST"
+
+      - name: Build freebox_profiles.zip
+        run: |
+          cd custom_components/freebox_profiles
+          zip -r ../../freebox_profiles.zip . -x "__pycache__/*"
+
+      - name: Attach the archive to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: freebox_profiles.zip

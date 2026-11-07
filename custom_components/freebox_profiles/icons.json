@@ -1,0 +1,44 @@
+{
+  "entity": {
+    "select": {
+      "mode": {
+        "default": "mdi:account-cog",
+        "state": {
+          "planning": "mdi:calendar-clock",
+          "allowed": "mdi:web-check",
+          "denied": "mdi:web-off"
+        }
+      }
+    },
+    "sensor": {
+      "current_mode": {
+        "default": "mdi:web",
+        "state": {
+          "allowed": "mdi:web-check",
+          "denied": "mdi:web-off",
+          "webonly": "mdi:web-box"
+        }
+      },
+      "planned_mode": {
+        "default": "mdi:calendar-clock"
+      },
+      "override_end": {
+        "default": "mdi:timer-sand"
+      },
+      "next_change": {
+        "default": "mdi:calendar-arrow-right"
+      },
+      "connected_devices": {
+        "default": "mdi:devices"
+      }
+    }
+  },
+  "services": {
+    "set_override": {
+      "service": "mdi:account-lock"
+    },
+    "clear_override": {
+      "service": "mdi:calendar-clock"
+    }
+  }
+}

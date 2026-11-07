@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to the Freebox",
+        "description": "Home Assistant must be on the same local network as the Freebox. Keep the default address unless you know what you are doing.",
+        "data": {
+          "host": "Address",
+          "port": "HTTPS port",
+          "verify_ssl": "Verify the Freebox certificate"
+        },
+        "data_description": {
+          "host": "mafreebox.freebox.fr works on any Freebox local network.",
+          "port": "443 for local access.",
+          "verify_ssl": "Uses the Free root certificates. Only disable it to troubleshoot."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Authorize Home Assistant again",
+        "description": "The Freebox no longer accepts the access token of Home Assistant. Submit to request a new authorization, then accept it on the Freebox."
+      }
+    },
+    "progress": {
+      "wait_for_authorization": "Accept the access request on your Freebox now (front display or as your model asks). You have about 2 minutes."
+    },
+    "error": {
+      "cannot_connect": "Cannot reach the Freebox. Check the address and that Home Assistant is on the Freebox local network.",
+      "unsupported": "This Freebox does not provide the Profile API (Freebox OS API v8 or newer is needed).",
+      "unknown": "Unexpected error, see the logs."
+    },
+    "abort": {
+      "already_configured": "This Freebox is already configured.",
+      "authorization_denied": "The access request was refused on the Freebox.",
+      "authorization_timeout": "The access request was not accepted in time. Try again.",
+      "authorization_error": "The authorization failed, see the logs.",
+      "reauth_successful": "Home Assistant is authorized again.",
+      "wrong_box": "This is not the same Freebox as before."
+    },
+    "create_entry": {
+      "default": "Last step: in Freebox OS, open Settings > Access management > Applications, edit \"Home Assistant - Freebox Profiles\" and enable the \"Profiles\" permission (parental control). Without it, the integration cannot read the profiles."
+    }
+  },
+  "entity": {
+    "select": {
+      "mode": {
+        "name": "Mode",
+        "state": {
+          "planning": "Planning",
+          "allowed": "Allowed",
+          "denied": "Blocked"
+        }
+      }
+    },
+    "sensor": {
+      "current_mode": {
+        "name": "Internet access",
+        "state": {
+          "allowed": "Allowed",
+          "denied": "Blocked",
+          "webonly": "Web only"
+        }
+      },
+      "planned_mode": {
+        "name": "Planned access",
+        "state": {
+          "allowed": "Allowed",
+          "denied": "Blocked",
+          "webonly": "Web only"
+        }
+      },
+      "override_end": {
+        "name": "Override end"
+      },
+      "next_change": {
+        "name": "Next planned change"
+      },
+      "connected_devices": {
+        "name": "Connected devices"
+      }
+    }
+  },
+  "selector": {
+    "override_mode": {
+      "options": {
+        "denied": "Block Internet",
+        "allowed": "Allow Internet"
+      }
+    }
+  },
+  "services": {
+    "set_override": {
+      "name": "Override profile",
+      "description": "Blocks or allows Internet for a profile, ignoring its planning, for a duration or without time limit.",
+      "fields": {
+        "mode": {
+          "name": "Mode",
+          "description": "Block or allow Internet."
+        },
+        "duration": {
+          "name": "Duration",
+          "description": "Duration in minutes. 0 or empty: no time limit."
+        }
+      }
+    },
+    "clear_override": {
+      "name": "Return to planning",
+      "description": "Removes the override: the profile follows its planning again."
+    }
+  },
+  "issues": {
+    "missing_permission": {
+      "title": "Freebox Profiles: permission missing",
+      "description": "Home Assistant cannot read the profiles of {title}. In Freebox OS, open Settings > Access management > Applications, edit \"Home Assistant - Freebox Profiles\" and enable the \"Profiles\" permission. This message disappears once it works."
+    }
+  },
+  "exceptions": {
+    "missing_permission": {
+      "message": "The Home Assistant application lacks the \"Profiles\" permission in Freebox OS."
+    },
+    "update_failed": {
+      "message": "Error while talking to the Freebox: {error}"
+    },
+    "unknown_profile": {
+      "message": "Unknown Freebox profile {profile_id}."
+    }
+  }
+}
