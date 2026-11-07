@@ -40,7 +40,43 @@
       "default": "Last step: in Freebox OS, open Settings > Access management > Applications, edit \"Home Assistant - Freebox Profiles\" and enable the \"Profiles\" permission (parental control). Without it, the integration cannot read the profiles."
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Connection notifications",
+        "description": "Get a notification on your phone each time a device of a profile connects to the Freebox. The phones listed are the ones with the Home Assistant Companion app.",
+        "data": {
+          "notify_services": "Phones to notify",
+          "notify_profiles": "Profiles",
+          "offline_delay": "Minimum time offline"
+        },
+        "data_description": {
+          "notify_services": "Leave empty to receive no notification. The \"Device connected\" event entity of each profile is updated anyway.",
+          "notify_profiles": "Leave empty to be notified for all profiles.",
+          "offline_delay": "A device must have been disconnected for at least this long to count as a new connection, so that a phone waking up from sleep does not notify. 0: notify at every reconnection."
+        }
+      }
+    }
+  },
   "entity": {
+    "event": {
+      "device_connected": {
+        "name": "Device connected",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "connected": "Connected"
+            }
+          },
+          "device_name": {
+            "name": "Device"
+          },
+          "mac": {
+            "name": "MAC address"
+          }
+        }
+      }
+    },
     "select": {
       "mode": {
         "name": "Mode",

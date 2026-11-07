@@ -1,5 +1,10 @@
 {
   "entity": {
+    "event": {
+      "device_connected": {
+        "default": "mdi:lan-connect"
+      }
+    },
     "select": {
       "mode": {
         "default": "mdi:account-cog",

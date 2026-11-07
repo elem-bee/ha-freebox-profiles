@@ -1,7 +1,13 @@
 {
   "domain": "freebox_profiles",
   "name": "Freebox Profiles",
-  "codeowners": ["@elem-bee"],
+  "categories": [
+    "computers_network.routers_network",
+    "presence_location.network_presence"
+  ],
+  "codeowners": [
+    "@elem-bee"
+  ],
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/elem-bee/ha-freebox-profiles",

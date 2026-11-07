@@ -18,6 +18,7 @@ Chaque profil de Freebox OS devient un appareil dans Home Assistant, avec :
 | Fin de la dérogation | Capteur (date) | Fin de la pause ou de l'autorisation temporaire |
 | Prochain changement prévu | Capteur (date) | Prochaine bascule du planning |
 | Appareils connectés | Capteur | Nombre d'appareils du profil joignables ; la liste détaillée (nom, connexion, bande Wi-Fi, signal) est en attributs |
+| Appareil connecté | Événement | Se déclenche quand un appareil du profil se connecte (nom et adresse MAC en attributs) |
 
 Deux actions sont disponibles pour les automatisations :
 
@@ -62,6 +63,18 @@ Copiez le dossier `custom_components/freebox_profiles` dans le dossier `config/c
 
 Sans l'étape 4, l'intégration affiche une alerte dans **Paramètres > Réparations** et réessaie régulièrement. Elle disparaît d'elle-même une fois la permission accordée.
 
+### Notifications de connexion
+
+Pour être prévenu sur votre téléphone chaque fois qu'un appareil d'un profil se connecte : **Paramètres > Appareils et services > Freebox Profiles > Configurer**, puis choisissez :
+
+- **Téléphones à notifier** : les téléphones qui ont l'application Home Assistant (Companion) ;
+- **Profils** : ceux qui vous intéressent (vide : tous) ;
+- **Durée minimale de déconnexion** (5 minutes par défaut) : un appareil doit être resté déconnecté au moins ce temps pour qu'une reconnexion soit signalée. Cela évite d'être notifié chaque fois qu'un téléphone sort de veille. Mettez 0 pour être notifié à chaque reconnexion.
+
+Les appareils déjà connectés au démarrage de Home Assistant, ou ajoutés à un profil alors qu'ils sont connectés, ne déclenchent rien. La détection suit le rafraîchissement : la notification arrive dans les 30 secondes.
+
+Chaque connexion déclenche aussi l'entité *Appareil connecté* du profil et l'événement `freebox_profiles_device_connected` (`profile_id`, `profile_name`, `device_name`, `mac`), pour vos propres automatisations.
+
 ## Exemples d'automatisations
 
 Couper Internet sur un profil à 22 h, pour 8 heures :
@@ -105,6 +118,20 @@ actions:
   - action: notify.notify
     data:
       message: "Un appareil du profil Chambre ado est connecté pendant le blocage."
+```
+
+Notification personnalisée quand un appareil précis se connecte :
+
+```yaml
+triggers:
+  - trigger: event
+    event_type: freebox_profiles_device_connected
+    event_data:
+      mac: "AA:BB:CC:DD:EE:FF"
+actions:
+  - action: notify.mobile_app_mon_telephone
+    data:
+      message: "{{ trigger.event.data.device_name }} vient de se connecter."
 ```
 
 Remplacez les identifiants d'entités par les vôtres (ils dépendent du nom de vos profils).

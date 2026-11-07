@@ -17,6 +17,11 @@ from .api import (
     FreeboxError,
     FreeboxPermissionError,
 )
+from .connections import (
+    ConnectionTracker,
+    async_announce_connections,
+    offline_delay_seconds,
+)
 from .const import DOMAIN, PROFILE_UPDATE_KEYS, SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
@@ -44,6 +49,7 @@ class FreeboxProfilesCoordinator(DataUpdateCoordinator[dict[int, dict[str, Any]]
             update_interval=SCAN_INTERVAL,
         )
         self.client = client
+        self._tracker = ConnectionTracker(lambda: offline_delay_seconds(entry))
 
     @property
     def _issue_id(self) -> str:
@@ -79,11 +85,14 @@ class FreeboxProfilesCoordinator(DataUpdateCoordinator[dict[int, dict[str, Any]]
             ) from err
 
         ir.async_delete_issue(self.hass, DOMAIN, self._issue_id)
-        return {
+        data = {
             int(profile["profile_id"]): profile
             for profile in profiles
             if "profile_id" in profile
         }
+        if connected := self._tracker.update(data):
+            async_announce_connections(self.hass, self.config_entry, connected)
+        return data
 
     async def async_set_override(
         self,

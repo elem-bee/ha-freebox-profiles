@@ -40,7 +40,43 @@
       "default": "Dernière étape : dans Freebox OS, ouvrez Paramètres > Gestion des accès > Applications, modifiez « Home Assistant - Freebox Profiles » et activez la permission « Profils » (contrôle parental). Sans elle, l'intégration ne peut pas lire les profils."
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Notifications de connexion",
+        "description": "Recevez une notification sur votre téléphone chaque fois qu'un appareil d'un profil se connecte à la Freebox. Les téléphones proposés sont ceux qui ont l'application Home Assistant (Companion).",
+        "data": {
+          "notify_services": "Téléphones à notifier",
+          "notify_profiles": "Profils",
+          "offline_delay": "Durée minimale de déconnexion"
+        },
+        "data_description": {
+          "notify_services": "Laissez vide pour ne recevoir aucune notification. L'entité événement « Appareil connecté » de chaque profil est mise à jour dans tous les cas.",
+          "notify_profiles": "Laissez vide pour être notifié pour tous les profils.",
+          "offline_delay": "Un appareil doit être resté déconnecté au moins ce temps pour compter comme une nouvelle connexion, afin qu'un téléphone qui sort de veille ne déclenche rien. 0 : notifier à chaque reconnexion."
+        }
+      }
+    }
+  },
   "entity": {
+    "event": {
+      "device_connected": {
+        "name": "Appareil connecté",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "connected": "Connecté"
+            }
+          },
+          "device_name": {
+            "name": "Appareil"
+          },
+          "mac": {
+            "name": "Adresse MAC"
+          }
+        }
+      }
+    },
     "select": {
       "mode": {
         "name": "Mode",

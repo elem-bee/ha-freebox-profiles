@@ -54,6 +54,21 @@ SERVICE_CLEAR_OVERRIDE: Final = "clear_override"
 ATTR_MODE: Final = "mode"
 ATTR_DURATION: Final = "duration"
 
+# Options: notifications when a device of a profile connects.
+CONF_NOTIFY_SERVICES: Final = "notify_services"
+CONF_NOTIFY_PROFILES: Final = "notify_profiles"
+CONF_OFFLINE_DELAY: Final = "offline_delay"
+DEFAULT_OFFLINE_DELAY: Final = 5  # minutes
+MOBILE_APP_PREFIX: Final = "mobile_app_"
+
+# Fired on the event bus each time a device of a profile connects.
+EVENT_DEVICE_CONNECTED: Final = f"{DOMAIN}_device_connected"
+EVENT_TYPE_CONNECTED: Final = "connected"
+ATTR_PROFILE_ID: Final = "profile_id"
+ATTR_PROFILE_NAME: Final = "profile_name"
+ATTR_DEVICE_NAME: Final = "device_name"
+ATTR_MAC: Final = "mac"
+
 # Root certificates published by Free on https://dev.freebox.fr/sdk/os/
 # Used to validate the HTTPS certificate of the Freebox.
 FREEBOX_ROOT_CA: Final = """-----BEGIN CERTIFICATE-----

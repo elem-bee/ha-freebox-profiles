@@ -12,10 +12,22 @@ import voluptuous as vol
 
 from homeassistant.config_entries import (
     SOURCE_REAUTH,
+    ConfigEntry,
     ConfigFlow,
     ConfigFlowResult,
+    OptionsFlow,
 )
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_VERIFY_SSL
+from homeassistant.core import callback
+from homeassistant.helpers.selector import (
+    NumberSelector,
+    NumberSelectorConfig,
+    NumberSelectorMode,
+    SelectOptionDict,
+    SelectSelector,
+    SelectSelectorConfig,
+    SelectSelectorMode,
+)
 
 from .api import (
     FreeboxClient,
@@ -29,9 +41,14 @@ from .const import (
     AUTH_POLL_INTERVAL,
     AUTH_POLL_MAX_TRIES,
     CONF_APP_TOKEN,
+    CONF_NOTIFY_PROFILES,
+    CONF_NOTIFY_SERVICES,
+    CONF_OFFLINE_DELAY,
     DEFAULT_HOST,
+    DEFAULT_OFFLINE_DELAY,
     DEFAULT_PORT,
     DOMAIN,
+    MOBILE_APP_PREFIX,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -43,6 +60,12 @@ class FreeboxProfilesConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Freebox Profiles."""
 
     VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
+        """Return the options flow."""
+        return FreeboxProfilesOptionsFlow()
 
     def __init__(self) -> None:
         """Initialize the flow."""
@@ -211,3 +234,78 @@ class FreeboxProfilesConfigFlow(ConfigFlow, domain=DOMAIN):
                 return await self.async_step_authorize()
             await self._async_close()
         return self.async_show_form(step_id="reauth_confirm", errors=errors)
+
+
+class FreeboxProfilesOptionsFlow(OptionsFlow):
+    """Choose who is notified when a device of a profile connects."""
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Show the notification options."""
+        if user_input is not None:
+            return self.async_create_entry(data=user_input)
+
+        options = self.config_entry.options
+        current_services: list[str] = options.get(CONF_NOTIFY_SERVICES, [])
+        current_profiles: list[str] = options.get(CONF_NOTIFY_PROFILES, [])
+
+        # Companion app phones, plus the ones already chosen even if gone.
+        services = sorted(
+            {
+                name
+                for name in self.hass.services.async_services_for_domain("notify")
+                if name.startswith(MOBILE_APP_PREFIX)
+            }
+            | set(current_services)
+        )
+        profiles: dict[str, str] = {}
+        coordinator = getattr(self.config_entry, "runtime_data", None)
+        if coordinator is not None and coordinator.data:
+            for profile_id, profile in sorted(coordinator.data.items()):
+                name = str(profile.get("profile_name") or "").strip()
+                profiles[str(profile_id)] = name or f"Profile {profile_id}"
+        for profile_id in current_profiles:
+            profiles.setdefault(profile_id, f"Profile {profile_id}")
+
+        schema = vol.Schema(
+            {
+                vol.Optional(
+                    CONF_NOTIFY_SERVICES, default=current_services
+                ): SelectSelector(
+                    SelectSelectorConfig(
+                        options=[
+                            SelectOptionDict(value=name, label=f"notify.{name}")
+                            for name in services
+                        ],
+                        multiple=True,
+                        mode=SelectSelectorMode.LIST,
+                    )
+                ),
+                vol.Optional(
+                    CONF_NOTIFY_PROFILES, default=current_profiles
+                ): SelectSelector(
+                    SelectSelectorConfig(
+                        options=[
+                            SelectOptionDict(value=value, label=label)
+                            for value, label in profiles.items()
+                        ],
+                        multiple=True,
+                        mode=SelectSelectorMode.LIST,
+                    )
+                ),
+                vol.Required(
+                    CONF_OFFLINE_DELAY,
+                    default=options.get(CONF_OFFLINE_DELAY, DEFAULT_OFFLINE_DELAY),
+                ): NumberSelector(
+                    NumberSelectorConfig(
+                        min=0,
+                        max=1440,
+                        step=1,
+                        unit_of_measurement="min",
+                        mode=NumberSelectorMode.BOX,
+                    )
+                ),
+            }
+        )
+        return self.async_show_form(step_id="init", data_schema=schema)

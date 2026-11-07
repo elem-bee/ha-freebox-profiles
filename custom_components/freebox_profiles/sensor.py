@@ -17,6 +17,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import dt as dt_util
 
+from .connections import host_name
 from .const import MODE_ALLOWED, MODE_DENIED, MODE_WEBONLY
 from .coordinator import FreeboxProfilesConfigEntry, FreeboxProfilesCoordinator
 from .entity import FreeboxProfileEntity, async_track_new_profiles
@@ -46,14 +47,6 @@ def _next_change(profile: dict[str, Any]) -> datetime | None:
     return dt_util.utc_from_timestamp(timestamp)
 
 
-def _device_name(host: dict[str, Any]) -> str:
-    return (
-        host.get("primary_name")
-        or host.get("default_name")
-        or host.get("l2ident", {}).get("id", "")
-    )
-
-
 def _connected(profile: dict[str, Any]) -> list[dict[str, Any]]:
     return [host for host in profile.get("hosts", []) if host.get("reachable")]
 
@@ -65,7 +58,7 @@ def _devices_attributes(profile: dict[str, Any]) -> dict[str, Any]:
         wifi = access_point.get("wifi_information") or {}
         devices.append(
             {
-                "name": _device_name(host),
+                "name": host_name(host),
                 "mac": host.get("l2ident", {}).get("id"),
                 "connected": bool(host.get("reachable")),
                 "type": host.get("host_type"),

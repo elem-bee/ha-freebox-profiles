@@ -18,6 +18,7 @@ Each Freebox OS profile becomes a device in Home Assistant, with:
 | Override end | Sensor (timestamp) | End of the pause or temporary allowance |
 | Next planned change | Sensor (timestamp) | Next switch of the planning |
 | Connected devices | Sensor | Number of reachable devices of the profile; details (name, connection, Wi-Fi band, signal) as attributes |
+| Device connected | Event | Triggered when a device of the profile connects (name and MAC address as attributes) |
 
 Two actions are available for automations:
 
@@ -62,6 +63,18 @@ Copy `custom_components/freebox_profiles` into the `config/custom_components/` f
 
 Without step 4, the integration raises an alert in **Settings > Repairs** and keeps retrying. The alert disappears once the permission is granted.
 
+### Connection notifications
+
+To get a notification on your phone each time a device of a profile connects: **Settings > Devices & services > Freebox Profiles > Configure**, then choose:
+
+- **Phones to notify**: the phones with the Home Assistant Companion app;
+- **Profiles**: the ones you care about (empty: all);
+- **Minimum time offline** (5 minutes by default): a device must have been disconnected for at least this long for its reconnection to be reported. This avoids a notification each time a phone wakes up from sleep. Set 0 to be notified at every reconnection.
+
+Devices already connected when Home Assistant starts, or added to a profile while connected, trigger nothing. Detection follows the refresh: the notification arrives within 30 seconds.
+
+Each connection also triggers the *Device connected* entity of the profile and the `freebox_profiles_device_connected` event (`profile_id`, `profile_name`, `device_name`, `mac`), for your own automations.
+
 ## Automation examples
 
 Block Internet for a profile at 10 pm, for 8 hours:
@@ -88,6 +101,20 @@ actions:
   - action: freebox_profiles.clear_override
     target:
       entity_id: select.teen_room_mode
+```
+
+Custom notification when a given device connects:
+
+```yaml
+triggers:
+  - trigger: event
+    event_type: freebox_profiles_device_connected
+    event_data:
+      mac: "AA:BB:CC:DD:EE:FF"
+actions:
+  - action: notify.mobile_app_my_phone
+    data:
+      message: "{{ trigger.event.data.device_name }} just connected."
 ```
 
 Replace the entity ids with yours (they depend on your profile names and Home Assistant language).

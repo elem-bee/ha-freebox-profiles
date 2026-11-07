@@ -1,5 +1,11 @@
 # Changelog
 
+## Non publié
+
+- Notifications par l'application Companion quand un appareil d'un profil se connecte, réglables dans les options (téléphones, profils, durée minimale de déconnexion).
+- Entité événement « Appareil connecté » par profil et événement `freebox_profiles_device_connected`.
+- Catégories d'intégration dans `manifest.json`.
+
 ## 0.1.0 – 2026-11-07
 
 Première version / First release.
