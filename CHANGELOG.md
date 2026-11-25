@@ -1,6 +1,6 @@
 # Changelog
 
-## Non publié
+## 0.2.0 – 2026-11-25
 
 - Interrupteur « Pause » par profil : coupe Internet sans limite de durée, et rend la main au planning une fois éteint.
 - Notifications par l'application Companion quand un appareil d'un profil se connecte, réglables dans les options (téléphones, profils, durée minimale de déconnexion).
