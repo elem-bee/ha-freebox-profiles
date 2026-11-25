@@ -13,6 +13,7 @@ Chaque profil de Freebox OS devient un appareil dans Home Assistant, avec :
 | Entité | Type | Rôle |
 |---|---|---|
 | Mode | Sélecteur | *Planning*, *Autorisé* ou *Bloqué* (sans limite de durée) |
+| Pause | Interrupteur | Comme le bouton « Pause » de l'app Freebox : allumé, Internet est coupé pour le profil sans limite de durée ; éteint, le profil revient à son planning |
 | Accès Internet | Capteur | État réel : autorisé, bloqué ou web uniquement |
 | Accès prévu par le planning | Capteur | Ce que prévoit le planning en ce moment |
 | Fin de la dérogation | Capteur (date) | Fin de la pause ou de l'autorisation temporaire |

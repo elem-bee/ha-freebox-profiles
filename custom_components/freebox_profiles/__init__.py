@@ -11,7 +11,12 @@ from .api import FreeboxClient, create_ssl_context
 from .const import CONF_APP_TOKEN
 from .coordinator import FreeboxProfilesConfigEntry, FreeboxProfilesCoordinator
 
-PLATFORMS: list[Platform] = [Platform.EVENT, Platform.SELECT, Platform.SENSOR]
+PLATFORMS: list[Platform] = [
+    Platform.EVENT,
+    Platform.SELECT,
+    Platform.SENSOR,
+    Platform.SWITCH,
+]
 
 
 async def async_setup_entry(
