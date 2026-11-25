@@ -2,6 +2,7 @@
 
 ## Non publié
 
+- Interrupteur « Pause » par profil : coupe Internet sans limite de durée, et rend la main au planning une fois éteint.
 - Notifications par l'application Companion quand un appareil d'un profil se connecte, réglables dans les options (téléphones, profils, durée minimale de déconnexion).
 - Entité événement « Appareil connecté » par profil et événement `freebox_profiles_device_connected`.
 - Catégories d'intégration dans `manifest.json`.

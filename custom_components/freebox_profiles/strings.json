@@ -113,6 +113,11 @@
       "connected_devices": {
         "name": "Connected devices"
       }
+    },
+    "switch": {
+      "pause": {
+        "name": "Pause"
+      }
     }
   },
   "selector": {

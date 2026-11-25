@@ -13,6 +13,7 @@ Each Freebox OS profile becomes a device in Home Assistant, with:
 | Entity | Type | Purpose |
 |---|---|---|
 | Mode | Select | *Planning*, *Allowed* or *Blocked* (no time limit) |
+| Pause | Switch | Like the "Pause" button of the Freebox app: on, Internet is blocked for the profile with no time limit; off, the profile follows its planning again |
 | Internet access | Sensor | Actual state: allowed, blocked or web only |
 | Planned access | Sensor | What the planning sets right now |
 | Override end | Sensor (timestamp) | End of the pause or temporary allowance |

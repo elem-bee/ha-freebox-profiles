@@ -36,6 +36,15 @@
       "connected_devices": {
         "default": "mdi:devices"
       }
+    },
+    "switch": {
+      "pause": {
+        "default": "mdi:pause-circle-outline",
+        "state": {
+          "on": "mdi:web-off",
+          "off": "mdi:web"
+        }
+      }
     }
   },
   "services": {
